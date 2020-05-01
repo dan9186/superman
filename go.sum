@@ -1,0 +1,12 @@
+github.com/gomicro/blockit v0.0.2 h1:qk7TVeTJNU5wj/nQRWFjbQvRgPCl2hp87yIX7Vl+L+0=
+github.com/gomicro/blockit v0.0.2/go.mod h1:jyacgk1q51/PVXtKs+uKCW9EzxU5bNZTOfgB89556fU=
+github.com/gomicro/ledger v0.1.0 h1:gf3it4Jtvk5x/9j7k2OnG/b4sHd2iiOjx2KrUAMT8mk=
+github.com/gomicro/ledger v0.1.0/go.mod h1:i8iwmLiyJnMyOx0w/eTIhud+kpyg+HzGNnSDvnRfNGs=
+github.com/gomicro/steward v0.0.3 h1:ez1z8R/+8U4RyodcsX5r0ztfABTVfeqi8E1AcCU0wio=
+github.com/gomicro/steward v0.0.3/go.mod h1:cnBP508O7+UqzK6EQdOVOxpXh2ae7lv5Ux2uuy6SzU4=
+github.com/gorilla/mux v1.7.4 h1:VuZ8uybHlWmqV03+zRzdwKL4tUnIp1MAQtp1mIFE1bc=
+github.com/gorilla/mux v1.7.4/go.mod h1:DVbg23sWSpFRCP0SfiEN6jmj59UnW/n46BH5rLB71So=
+github.com/kelseyhightower/envconfig v1.4.0 h1:Im6hONhd3pLkfDFsbRgu68RDNkGF1r3dvMUtDTo2cv8=
+github.com/kelseyhightower/envconfig v1.4.0/go.mod h1:cccZRl6mQpaq41TPp5QxidR+Sa3axMbJDNb//FQX6Gg=
+github.com/lib/pq v1.4.0 h1:TmtCFbH+Aw0AixwyttznSMQDgbR5Yed/Gg6S8Funrhc=
+github.com/lib/pq v1.4.0/go.mod h1:5WUZQaWbwv1U+lTReE5YruASi9Al49XbQIvNi/34Woo=
