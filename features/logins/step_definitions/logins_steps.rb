@@ -1,5 +1,5 @@
 Given('a login event') do
-  pending
+  fail
 end
 
 When('the event is submitted') do
