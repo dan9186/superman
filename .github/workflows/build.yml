@@ -35,8 +35,8 @@ jobs:
       run: |
         make linters
 
-  test:
-    name: Test
+  unit_test:
+    name: Unit Test
     runs-on: ubuntu-latest
 
     env:
@@ -57,4 +57,28 @@ jobs:
 
     - name: Test
       working-directory: ${{ github.workspace }}/src/github.com/${{ github.repository }}
-      run: make test
+      run: make unit_test
+
+  func_test:
+    name: Functional Test
+    runs-on: ubuntu-latest
+
+    env:
+      GOPATH: ${{ github.workspace }}
+
+    steps:
+
+    - name: Install Go
+      uses: actions/setup-go@v1
+      with:
+        go-version: 1.14
+
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 1
+        path: ./src/github.com/${{ github.repository }}
+
+    - name: Test
+      working-directory: ${{ github.workspace }}/src/github.com/${{ github.repository }}
+      run: make run functional_test

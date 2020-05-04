@@ -58,4 +58,4 @@ unit_test: ## Run unit tests
 
 .PHONY: functional_test
 functional_test: ## Runs the functional tests against the running service
-	docker run -it -v $$PWD/features:/usr/app/features --network=$(APP)_services gomicro/cucumber cucumber $$CUKE_TAGS
+	docker run -i -v $$PWD/features:/usr/app/features --network=$(APP)_services gomicro/cucumber cucumber $$CUKE_TAGS
