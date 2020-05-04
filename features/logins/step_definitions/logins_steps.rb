@@ -1,5 +1,10 @@
 Given('a login event') do
-  fail
+  @expected_event = {
+    "username": "amy_pond",
+    "unix_timestamp": Time.now.to_i,
+    "event_uuid": SecureRandom.uuid,
+    "ip_address": "206.81.252.6"
+  }
 end
 
 When('the event is submitted') do
