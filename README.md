@@ -1,10 +1,42 @@
 # Superman
 
-## Versioning
+## Building
+All steps below are run the same way they are in the build. The build may chain the steps slightly differently for the benefit of reporting, but otherwise does the same thing.
 
-The project will be versioned in accordance with [Semver 2.0.0](https://semver.org). See the [releases](https://github.com/dan9186/superman/releases) section for the latest version. Until version 1.0.0 the project is considered to be unstable.
+### Running
 
-It is always highly recommended to vendor the version you are using.
+The service will be stood up in a local docker environment and bound to `localhost:4567` for allowing any manual poking and proding of the service.
 
-## License
-See [LICENSE.md](./LICENSE.md) for more information.
+```
+make run
+```
+
+### Test
+
+The test target executes both unit tests and functional tests. If the local environment of the service is not running, the functional tests will fail.
+
+```
+make test
+```
+
+### Clean
+
+To destroy the local environment and remove any other generated files, you can clean the project and start fresh.
+
+```
+make clean
+```
+
+### Help
+
+The help target will provide additional targets not highlighted above along with explanations of what each does.
+
+```
+make help
+```
+
+
+## Resources Used
+
+* [Gomicro Service](https://github.com/gomicro/service) - used to bootstrap service (dockerfile, docker-compose, minimal running go service)
+* [Gomicro Cucumber Docker Image](https://github.com/gomicro/docker-cucumber) - used to execute BDD style tests written in cucumber
