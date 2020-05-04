@@ -50,8 +50,12 @@ run: dockerize pull_dependencies ## Run a dockerized version of the app
 	docker-compose up -d
 
 .PHONY: test
-test: unit_test ## Run all available tests
+test: unit_test functional_test ## Run all available tests
 
 .PHONY: unit_test
-unit_test: ecr_login  ## Run unit tests
+unit_test: ## Run unit tests
 	go test ./...
+
+.PHONY: functional_test
+functional_test: ## Runs the functional tests against the running service
+	docker run -it -v $$PWD/features:/usr/app/features --network=$(APP)_services gomicro/cucumber cucumber $$CUKE_TAGS
