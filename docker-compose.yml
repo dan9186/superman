@@ -14,24 +14,6 @@ services:
       retries: 3
     env_file: ./env.test
 
-  db:
-    image: postgres:11.7-alpine
-    environment:
-      POSTGRES_USER: superman
-      POSTGRES_DB: superman
-      POSTGRES_HOST_AUTH_METHOD: trust
-    ports:
-      - 5432:5432
-    networks:
-      services:
-        aliases:
-          - database
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U superman"]
-      interval: 5s
-      timeout: 30s
-      retries: 3
-
 networks:
   services:
     internal: false

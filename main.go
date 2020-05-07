@@ -9,12 +9,11 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/gomicro/blockit/dbblocker"
 	"github.com/gomicro/ledger"
 	"github.com/gomicro/steward"
 	"github.com/gorilla/mux"
 	"github.com/kelseyhightower/envconfig"
-	_ "github.com/lib/pq"
+	_ "github.com/mattn/go-sqlite3"
 )
 
 const (
