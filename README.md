@@ -5,7 +5,7 @@ All steps below are run the same way they are in the build. The build may chain 
 
 ### Running
 
-The service will be stood up in a local docker environment and bound to `localhost:4567` for allowing any manual poking and proding of the service.
+The service will be stood up in a local docker environment and bound to `localhost:4567` for allowing any manual poking and prodding of the service.
 
 ```
 make run
