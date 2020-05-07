@@ -13,7 +13,7 @@ end
 
 Then('I can see the contextual info about the event') do
   expect(@response.code.to_i).to(eql(201))
-  expect(@resonse.body).not_to(be_nil(), 'expected: body not nil\ngot: body nil')
+  expect(@response.body).not_to(be_nil(), 'expected: body not nil\ngot: body nil')
 
   body = JSON.parse(@response.body)
   expect(body).not_to(be_nil(), 'expected: json body not nil\ngot: json body nil')
