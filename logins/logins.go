@@ -16,9 +16,10 @@ type Event struct {
 	IPAddress     net.IP    `json:"ip_address"`
 }
 
-// Timestamp retuns the unix timestamp of the event as a golang Time object.
+// Timestamp retuns the unix timestamp of the event as a golang Time object. The
+// time will always be returned in UTC.
 func (e *Event) Timestamp() *time.Time {
-	t := time.Unix(e.UnixTimestamp, 0)
+	t := time.Unix(e.UnixTimestamp, 0).UTC()
 
 	return &t
 }
