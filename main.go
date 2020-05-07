@@ -175,7 +175,7 @@ func registerEndpoints() http.Handler {
 
 	r.Use(log.EndpointInfo)
 
-	r.HandleFunc("/some/endpoint", handleSomeEndpoint)
+	r.HandleFunc("/v1/event", handleSomeEndpoint)
 
 	return r
 }
