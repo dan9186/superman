@@ -38,5 +38,6 @@ make help
 
 ## Resources Used
 
-* [Gomicro Service](https://github.com/gomicro/service) - used to bootstrap service (dockerfile, docker-compose, minimal running go service)
 * [Gomicro Cucumber Docker Image](https://github.com/gomicro/docker-cucumber) - used to execute BDD style tests written in cucumber
+* [Gomicro Service](https://github.com/gomicro/service) - used to bootstrap service (dockerfile, docker-compose, minimal running go service)
+* [UUID](https://github.com/google/uuid) - used to facilitate uuid parsing

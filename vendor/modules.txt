@@ -4,6 +4,8 @@ github.com/gomicro/blockit/dbblocker
 github.com/gomicro/ledger
 # github.com/gomicro/steward v0.0.3
 github.com/gomicro/steward
+# github.com/google/uuid v1.1.1
+github.com/google/uuid
 # github.com/gorilla/mux v1.7.4
 github.com/gorilla/mux
 # github.com/kelseyhightower/envconfig v1.4.0
