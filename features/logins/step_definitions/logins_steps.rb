@@ -3,15 +3,15 @@ Given('a login event') do
     "username": "amy_pond",
     "unix_timestamp": Time.now.to_i,
     "event_uuid": SecureRandom.uuid,
-    "ip_address": "206.81.252.6"
   }
 end
 
-When('the event is submitted') do
+When(/^the event is submitted with the (.*)$/) do |ip_address|
+  @expected_event['ip_address'] = ip_address
   @response = post('http://app:4567/v1/event', @expected_event)
 end
 
-Then('I can see the contextual info about the event') do
+Then('I can see the contextual info about the event includes {float}, {float}, and {int}') do |latitude, longitude, radius|
   expect(@response.code.to_i).to(eql(201))
   expect(@response.body).not_to(be_nil(), 'expected: body not nil\ngot: body nil')
 
@@ -22,15 +22,15 @@ Then('I can see the contextual info about the event') do
 
   lat = body['currentGeo']['lat']
   expect(lat).not_to(be_nil(), "expected: lat field\ngot: field missing\nbody: #{body.inspect}")
-  expect(lat).to(eql(38.9206))
+  expect(lat).to(eql(latitude))
 
   lon = body['currentGeo']['lon']
   expect(lon).not_to(be_nil(), "expected: lon field\ngot: field missing\nbody: #{body.inspect}")
-  expect(lon).to(eql(-76.8787))
+  expect(lon).to(eql(longitude))
 
-  radius = body['currentGeo']['radius']
-  expect(radius).not_to(be_nil(), "expected: radius field\ngot: field missing\nbody: #{body.inspect}")
-  expect(radius).to(eql(1000))
+  rad = body['currentGeo']['radius']
+  expect(rad).not_to(be_nil(), "expected: radius field\ngot: field missing\nbody: #{body.inspect}")
+  expect(rad).to(eql(radius))
 
   expect(body['travelToCurrentGeoSuspicious']).to(eql(false))
   expect(body['travelFromCurrentGeoSuspicious']).to(eql(false))
