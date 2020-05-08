@@ -11,6 +11,8 @@ The service will be stood up in a local docker environment and bound to `localho
 make run
 ```
 
+It is worth noting that multiple calls to `make run` will result in the service being rebuilt and freshly started. So the development pattern can be `code => make run test => code => make run test => ...`
+
 ### Test
 
 The test target executes both unit tests and functional tests. If the local environment of the service is not running, the functional tests will fail.
