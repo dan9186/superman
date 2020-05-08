@@ -16,6 +16,7 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/oschwald/geoip2-golang"
 
+	"github.com/dan9186/superman/georesolver"
 	"github.com/dan9186/superman/logins"
 )
 
@@ -30,7 +31,7 @@ var (
 	config configuration
 
 	db    *sql.DB
-	geodb *geoip2.Reader
+	geodb georesolver.GeoResolver
 )
 
 type configuration struct {
