@@ -7,7 +7,8 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/oschwald/geoip2-golang"
+
+	"github.com/dan9186/superman/georesolver"
 )
 
 const (
@@ -25,7 +26,7 @@ type Event struct {
 
 // Analyze looks up comparative details of a login event and provides an
 // Analysis of the comparative details.
-func (e *Event) Analyze(geodb *geoip2.Reader) (*Analysis, error) {
+func (e *Event) Analyze(geodb georesolver.GeoResolver) (*Analysis, error) {
 	loc, err := e.ResolveLocation(geodb)
 	if err != nil {
 		return nil, fmt.Errorf("failed to resolve location: %v", err.Error())
@@ -40,7 +41,7 @@ func (e *Event) Analyze(geodb *geoip2.Reader) (*Analysis, error) {
 
 // ResolveLocation uses an event's IP address to determine a geolocation and
 // returns the details as a Location object.
-func (e *Event) ResolveLocation(geodb *geoip2.Reader) (*Location, error) {
+func (e *Event) ResolveLocation(geodb georesolver.GeoResolver) (*Location, error) {
 	r, err := geodb.City(e.IPAddress)
 	if err != nil {
 		return nil, fmt.Errorf("failed to lookup city for IP: %v", err.Error())
