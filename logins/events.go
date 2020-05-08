@@ -25,7 +25,19 @@ type Event struct {
 // Analyze looks up comparative details of a login event and provides an
 // Analysis of the comparative details.
 func (e *Event) Analyze() (*Analysis, error) {
-	return nil, nil
+	a := &Analysis{
+		CurrentLocation: e.ResolveLocation(),
+	}
+
+	return a, nil
+}
+
+// ResolveLocation uses an event's IP address to determine a geolocation and
+// returns the details as a Location object.
+func (e *Event) ResolveLocation() *Location {
+	l := &Location{}
+
+	return l
 }
 
 // Timestamp retuns the unix timestamp of the event as a golang Time object. The
