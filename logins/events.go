@@ -22,6 +22,12 @@ type Event struct {
 	IPAddress     net.IP    `json:"ip_address"`
 }
 
+// Analyze looks up comparative details of a login event and provides an
+// Analysis of the comparative details.
+func (e *Event) Analyze() (*Analysis, error) {
+	return nil, nil
+}
+
 // Timestamp retuns the unix timestamp of the event as a golang Time object. The
 // time will always be returned in UTC.
 func (e *Event) Timestamp() *time.Time {
