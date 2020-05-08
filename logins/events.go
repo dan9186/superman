@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/oschwald/geoip2-golang"
 )
 
 const (
@@ -39,10 +40,26 @@ func (e *Event) Analyze() (*Analysis, error) {
 
 // ResolveLocation uses an event's IP address to determine a geolocation and
 // returns the details as a Location object.
-func (e *Event) ResolveLocation() *Location {
-	l := &Location{}
+func (e *Event) ResolveLocation() (*Location, error) {
 
-	return l
+	db, err := geoip2.Open("./GeoLite2-City.mmdb")
+	if err != nil {
+		return nil, fmt.Errorf("failed to open geoip db: %v", err.Error())
+	}
+	defer db.Close()
+
+	record, err := db.City(e.IPAddress)
+	if err != nil {
+		return nil, fmt.Errorf("failed to lookup city for IP: %v", err.Error())
+	}
+
+	l := &Location{
+		Latitude:  record.Location.Latitude,
+		Longitude: record.Location.Longitude,
+		Radius:    int(record.Location.AccuracyRadius),
+	}
+
+	return l, nil
 }
 
 // Timestamp retuns the unix timestamp of the event as a golang Time object. The
