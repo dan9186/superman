@@ -25,8 +25,8 @@ type Event struct {
 
 // Analyze looks up comparative details of a login event and provides an
 // Analysis of the comparative details.
-func (e *Event) Analyze() (*Analysis, error) {
-	loc, err := e.ResolveLocation()
+func (e *Event) Analyze(geodb *geoip2.Reader) (*Analysis, error) {
+	loc, err := e.ResolveLocation(geodb)
 	if err != nil {
 		return nil, fmt.Errorf("failed to resolve location: %v", err.Error())
 	}
@@ -40,23 +40,16 @@ func (e *Event) Analyze() (*Analysis, error) {
 
 // ResolveLocation uses an event's IP address to determine a geolocation and
 // returns the details as a Location object.
-func (e *Event) ResolveLocation() (*Location, error) {
-
-	db, err := geoip2.Open("./GeoLite2-City.mmdb")
-	if err != nil {
-		return nil, fmt.Errorf("failed to open geoip db: %v", err.Error())
-	}
-	defer db.Close()
-
-	record, err := db.City(e.IPAddress)
+func (e *Event) ResolveLocation(geodb *geoip2.Reader) (*Location, error) {
+	r, err := geodb.City(e.IPAddress)
 	if err != nil {
 		return nil, fmt.Errorf("failed to lookup city for IP: %v", err.Error())
 	}
 
 	l := &Location{
-		Latitude:  record.Location.Latitude,
-		Longitude: record.Location.Longitude,
-		Radius:    int(record.Location.AccuracyRadius),
+		Latitude:  r.Location.Latitude,
+		Longitude: r.Location.Longitude,
+		Radius:    int(r.Location.AccuracyRadius),
 	}
 
 	return l, nil

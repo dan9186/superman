@@ -14,6 +14,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/kelseyhightower/envconfig"
 	_ "github.com/mattn/go-sqlite3"
+	"github.com/oschwald/geoip2-golang"
 
 	"github.com/dan9186/superman/logins"
 )
@@ -28,7 +29,8 @@ var (
 	log    *ledger.Ledger
 	config configuration
 
-	db *sql.DB
+	db    *sql.DB
+	geodb *geoip2.Reader
 )
 
 type configuration struct {
@@ -106,6 +108,13 @@ func configure() {
 		},
 	})
 	log.Debug("Status endpoint configured")
+
+	geodb, err = geoip2.Open("./GeoLite2-City.mmdb")
+	if err != nil {
+		log.Fatalf("failed to open geoip db: %v", err.Error())
+		os.Exit(1)
+	}
+	log.Debug("GeoDB configured")
 
 	os.Remove("./local.db")
 	log.Debug("Local DB cleanedup")
