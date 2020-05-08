@@ -92,6 +92,27 @@ func TestConfig(t *testing.T) {
 				Expect(c.Radius).To(Equal(20))
 			})
 		})
+
+		g.Describe("Analysis", func() {
+			g.It("should analyze a single event", func() {
+				mockGeoDB := georesolver.MockGeoDB{
+					ExpectedIP: net.ParseIP("206.81.252.6"),
+					Radius:     20,
+					Latitude:   42.4242,
+					Longitude:  42.4242,
+				}
+
+				var e Event
+				json.Unmarshal([]byte(validLoginEvent), &e)
+
+				a, err := e.Analyze(mockGeoDB)
+				Expect(err).To(BeNil())
+
+				Expect(a.CurrentLocation.Latitude).To(Equal(42.4242))
+				Expect(a.CurrentLocation.Longitude).To(Equal(42.4242))
+				Expect(a.CurrentLocation.Radius).To(Equal(20))
+			})
+		})
 	})
 }
 
