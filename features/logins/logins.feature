@@ -12,3 +12,26 @@ Feature:
       | ip_address     | latitude | longitude | radius |
       | 206.81.252.6   | 38.9206  | -76.8787  | 1000   |
       | 61.171.166.100 | 31.1458  | 121.6821  | 20     |
+
+  Scenario: Subsequent login events are sent
+    Given a login event
+    And a preceding login event
+    When the event is submitted
+    Then I can see the contextual info about the event
+    And I can see the preceding access info
+
+  Scenario: Out of order login events are sent
+    Given a login event
+    And subsequent login event
+    When the event is submitted
+    Then I can see the contextual info about the event
+    And I can see the subsequent access info
+
+  Scenario: Subsequent and preceding events already exist
+    Given a login event
+    And a preceding login event
+    And subsequent login event
+    When the event is submitted
+    Then I can see the contextual info about the event
+    And I can see the preceding access info
+    And I can see the subsequent access info
