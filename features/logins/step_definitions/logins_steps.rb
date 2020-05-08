@@ -4,7 +4,7 @@ Given('a login event') do
   time = Time.now.to_i - rand(1..31536000)
 
   @expected_event = {
-    "username": "amy_pond",
+    "username": "cuketest",
     "unix_timestamp": Time.now.to_i,
     "event_uuid": SecureRandom.uuid,
     "ip_address": "4.4.4.4",
@@ -15,7 +15,7 @@ Given("a preceding login event") do
   time = @expected_event[:unix_timestamp] - rand(1..100)
 
   @expected_preceding_event = {
-    "username": "amy_pond",
+    "username": "cuketest",
     "unix_timestamp": time,
     "event_uuid": SecureRandom.uuid,
     "ip_address": "56.3.181.4",
@@ -33,7 +33,7 @@ Given("a subsequent login event") do
   time = @expected_event[:unix_timestamp] + rand(1..100)
 
   @expected_subsequent_event = {
-    "username": "amy_pond",
+    "username": "cuketest",
     "unix_timestamp": time,
     "event_uuid": SecureRandom.uuid,
     "ip_address": "36.12.93.24",
@@ -170,4 +170,8 @@ Then("I can see the subsequent access info") do
   timestamp = body['subsequentIpAccess']['timestamp']
   expect(timestamp).not_to(be_nil(), "expected: timestamp field\ngot: field missing\nbody: #{body.inspect}")
   expect(timestamp).to(eql(@expected_subsequent_event[:unix_timestamp]))
+end
+
+After do
+  delete('http://app:4567/v1/cleanup')
 end

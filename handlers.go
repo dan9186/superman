@@ -55,3 +55,15 @@ func handleSomeEndpoint(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusCreated)
 	w.Write(resp)
 }
+
+func handleCleanup(w http.ResponseWriter, r *http.Request) {
+	err := logins.Cleanup(db)
+	if err != nil {
+		log.Errorf("failed to cleanup test data: %v", err.Error())
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte("failed to cleanup test data"))
+		return
+	}
+
+	w.WriteHeader(http.StatusNoContent)
+}
