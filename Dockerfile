@@ -1,17 +1,16 @@
-FROM golang:1.14-alpine
+FROM golang:1.14
 
 ARG BUILD_PATH
 
 ADD . $BUILD_PATH
 WORKDIR $BUILD_PATH
 
-RUN CGO_ENABLED=0 \
-    GOOS=linux \
+RUN GOOS=linux \
     go build \
     -o /service .
 
 
-FROM scratch
+FROM ubuntu
 
 COPY --from=0 /service service
 COPY --from=gomicro/probe /probe probe

@@ -9,12 +9,13 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/gomicro/blockit/dbblocker"
 	"github.com/gomicro/ledger"
 	"github.com/gomicro/steward"
 	"github.com/gorilla/mux"
 	"github.com/kelseyhightower/envconfig"
-	_ "github.com/lib/pq"
+	_ "github.com/mattn/go-sqlite3"
+
+	"github.com/dan9186/superman/logins"
 )
 
 const (
@@ -106,26 +107,27 @@ func configure() {
 	})
 	log.Debug("Status endpoint configured")
 
-	connStr := fmt.Sprintf(
-		"host=%s port=%s user=%s password=%s dbname=%s sslmode=%s",
-		config.DBHost, config.DBPort, config.DBUser, config.DBPassword, config.DBName, config.DBSSL,
-	)
-	db, err = sql.Open("postgres", connStr)
+	os.Remove("./local.db")
+	log.Debug("Local DB cleanedup")
+
+	db, err = sql.Open("sqlite3", "./local.db")
 	if err != nil {
-		log.Errorf("Cannot open sql connection: %v", err.Error())
+		log.Fatalf("Failed to open local DB: %v", err.Error())
+		os.Exit(1)
 	}
 
-	db.SetMaxIdleConns(50)
-	db.SetMaxOpenConns(50)
-
-	dbb := dbblocker.New(db)
-	log.Debug("Database connection configured")
-
-	log.Debug("Waiting for dependencies to stablize")
-	<-dbb.Blockit()
-	log.Debug("Dependencies have stablized")
+	bootstrapSqliteDB()
+	log.Debug("Local DB configured")
 
 	log.Info("Configuration complete")
+}
+
+func bootstrapSqliteDB() {
+	err := logins.BootstrapLogins(db)
+	if err != nil {
+		log.Fatalf("Failed to bootstrap logins in DB: %v", err.Error())
+		os.Exit(1)
+	}
 }
 
 func startService() error {
@@ -175,7 +177,7 @@ func registerEndpoints() http.Handler {
 
 	r.Use(log.EndpointInfo)
 
-	r.HandleFunc("/some/endpoint", handleSomeEndpoint)
+	r.HandleFunc("/v1/event", handleSomeEndpoint)
 
 	return r
 }

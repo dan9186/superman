@@ -5,11 +5,13 @@ All steps below are run the same way they are in the build. The build may chain 
 
 ### Running
 
-The service will be stood up in a local docker environment and bound to `localhost:4567` for allowing any manual poking and proding of the service.
+The service will be stood up in a local docker environment and bound to `localhost:4567` for allowing any manual poking and prodding of the service.
 
 ```
 make run
 ```
+
+It is worth noting that multiple calls to `make run` will result in the service being rebuilt and freshly started. So the development pattern can be `code => make run test => code => make run test => ...`
 
 ### Test
 
@@ -38,5 +40,22 @@ make help
 
 ## Resources Used
 
-* [Gomicro Service](https://github.com/gomicro/service) - used to bootstrap service (dockerfile, docker-compose, minimal running go service)
 * [Gomicro Cucumber Docker Image](https://github.com/gomicro/docker-cucumber) - used to execute BDD style tests written in cucumber
+* [Gomicro Service](https://github.com/gomicro/service) - used to bootstrap service (dockerfile, docker-compose, minimal running go service)
+* [UUID](https://github.com/google/uuid) - used to facilitate uuid parsing
+* [Goblin](https://github.com/franela/goblin) - used for organizing unit tests and better report output
+* [Gomega](https://github.com/onsi/gomega) - used for a convenient set of assertion matchers in tests
+* [SQLMock](https://github.com/DATA-DOG/go-sqlmock) - used for mocking the database and enable unit testing of database calls
+
+## Notes
+
+### SQLite Requirement
+
+Normally I would not use SQLite even for local development, as a significantly closer to deployed code setup can be accomplished with a postgres container.
+
+Specific Items of Note:
+
+* SQLite requires `CGO` to be enabled and requires either installing build tools or using the non `alpine` Golang image
+* The build on a fresh build instance takes longer due to the size difference of the `golang-alpine` vs `golang` docker images (370MB vs 809MB)
+* The resulting docker image is also larger, because we cannot run a scratch container (25MB vs 99MB)
+* Bootstrapping of the database gets built into the binary rather than being able to build it into the database image or use some migration tool that would apply to prod
