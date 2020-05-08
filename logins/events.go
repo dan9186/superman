@@ -25,8 +25,13 @@ type Event struct {
 // Analyze looks up comparative details of a login event and provides an
 // Analysis of the comparative details.
 func (e *Event) Analyze() (*Analysis, error) {
+	loc, err := e.ResolveLocation()
+	if err != nil {
+		return nil, fmt.Errorf("failed to resolve location: %v", err.Error())
+	}
+
 	a := &Analysis{
-		CurrentLocation: e.ResolveLocation(),
+		CurrentLocation: loc,
 	}
 
 	return a, nil
