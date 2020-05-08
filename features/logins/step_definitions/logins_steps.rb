@@ -31,4 +31,7 @@ Then('I can see the contextual info about the event') do
   radius = body['currentGeo']['radius']
   expect(radius).not_to(be_nil(), "expected: radius field\ngot: field missing\nbody: #{body.inspect}")
   expect(radius).to(eql(1000))
+
+  expect(body['travelToCurrentGeoSuspicious']).to(eql(false))
+  expect(body['travelFromCurrentGeoSuspicious']).to(eql(false))
 end
