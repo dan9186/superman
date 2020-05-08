@@ -8,7 +8,7 @@ import (
 	"github.com/dan9186/superman/logins"
 )
 
-func handleSomeEndpoint(w http.ResponseWriter, r *http.Request) {
+func handleEvent(w http.ResponseWriter, r *http.Request) {
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		log.Errorf("failed to read message body: %v", err.Error())
