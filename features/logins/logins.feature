@@ -22,7 +22,7 @@ Feature:
 
   Scenario: Out of order login events are sent
     Given a login event
-    And subsequent login event
+    And a subsequent login event
     When the event is submitted
     Then I can see the contextual info about the event
     And I can see the subsequent access info
@@ -30,7 +30,7 @@ Feature:
   Scenario: Subsequent and preceding events already exist
     Given a login event
     And a preceding login event
-    And subsequent login event
+    And a subsequent login event
     When the event is submitted
     Then I can see the contextual info about the event
     And I can see the preceding access info

@@ -1,5 +1,8 @@
 # Givens
 Given('a login event') do
+  # randomly pick a time in the past year for the focal event
+  time = Time.now.to_i - rand(1..31536000)
+
   @expected_event = {
     "username": "amy_pond",
     "unix_timestamp": Time.now.to_i,
@@ -9,9 +12,11 @@ Given('a login event') do
 end
 
 Given("a preceding login event") do
+  time = @expected_event[:unix_timestamp] - rand(1..100)
+
   @expected_preceding_event = {
     "username": "amy_pond",
-    "unix_timestamp": Time.now.to_i,
+    "unix_timestamp": time,
     "event_uuid": SecureRandom.uuid,
     "ip_address": "56.3.181.4",
   }
@@ -24,10 +29,12 @@ Given("a preceding login event") do
   @expected_event = expected_event
 end
 
-Given("subsequent login event") do
+Given("a subsequent login event") do
+  time = @expected_event[:unix_timestamp] + rand(1..100)
+
   @expected_subsequent_event = {
     "username": "amy_pond",
-    "unix_timestamp": Time.now.to_i,
+    "unix_timestamp": time,
     "event_uuid": SecureRandom.uuid,
     "ip_address": "36.12.93.24",
   }
@@ -109,7 +116,7 @@ Then("I can see the preceding access info") do
 
   expect(body['precedingIpAccess']).not_to(be_nil(), "expected: precedingIpAccess field\ngot: field missing\nbody: #{body.inspect}")
 
-  ip = body['precedingIpAccess']['ip']
+  ip = body['precedingIpAccess']['ip_address']
   expect(ip).not_to(be_nil(), "expected: ip field\ngot: field missing\nbody: #{body.inspect}")
   expect(ip).to(eql("figure me out"))
 
@@ -140,7 +147,7 @@ Then("I can see the subsequent access info") do
 
   expect(body['subsequentIpAccess']).not_to(be_nil(), "expected: subsequentIpAccess field\ngot: field missing\nbody: #{body.inspect}")
 
-  ip = body['subsequentIpAccess']['ip']
+  ip = body['subsequentIpAccess']['ip_address']
   expect(ip).not_to(be_nil(), "expected: ip field\ngot: field missing\nbody: #{body.inspect}")
   expect(ip).to(eql("figure me out"))
 
