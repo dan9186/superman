@@ -76,6 +76,10 @@ func (e *Event) getPreceding(db *sql.DB) (*Event, error) {
 
 	err := db.QueryRow(selectPrecedingEvent, e.Username, e.UnixTimestamp).Scan(&id, &unix, &ipStr)
 	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, nil
+		}
+
 		return nil, fmt.Errorf("failed to query for preceding event: %v", err.Error())
 	}
 
@@ -96,6 +100,10 @@ func (e *Event) getSubsequent(db *sql.DB) (*Event, error) {
 
 	err := db.QueryRow(selectSubsequentEvent, e.Username, e.UnixTimestamp).Scan(&id, &unix, &ipStr)
 	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, nil
+		}
+
 		return nil, fmt.Errorf("failed to query for subsequent event: %v", err.Error())
 	}
 
