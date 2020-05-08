@@ -13,7 +13,7 @@ Feature:
       | 206.81.252.6   | 38.9206  | -76.8787  | 1000   |
       | 61.171.166.100 | 31.1458  | 121.6821  | 20     |
 
-  Scenario: Subsequent login events are sent
+  Scenario: Preceding login events are sent
     Given a login event
     And a preceding login event
     When the event is submitted
