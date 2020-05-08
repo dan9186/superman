@@ -101,7 +101,14 @@ func TestConfig(t *testing.T) {
 					WithArgs("bob", 1514764800).
 					WillReturnRows(
 						sqlmock.NewRows([]string{"uuid", "timestamp", "ip_address"}).
-							AddRow("4e837b27-2005-4dbb-8f7e-f32c6c2af699", "1588930045", "91.207.175.104"),
+							AddRow("4e837b27-2005-4dbb-8f7e-f32c6c2af699", "1514764734", "91.207.175.104"),
+					)
+
+				mockAsserts.ExpectQuery(`SELECT uuid, timestamp, ip_address FROM logins WHERE username = (.*) AND timestamp > (.*) ORDER BY timestamp ASC LIMIT 1`).
+					WithArgs("bob", 1514764800).
+					WillReturnRows(
+						sqlmock.NewRows([]string{"uuid", "timestamp", "ip_address"}).
+							AddRow("d99df0fd-3a77-4662-910f-9e4f8ecfe25b", "1588930045", "24.242.71.20"),
 					)
 
 				mockGeoDB := georesolver.MockGeoDB{
