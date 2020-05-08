@@ -43,6 +43,9 @@ make help
 * [Gomicro Cucumber Docker Image](https://github.com/gomicro/docker-cucumber) - used to execute BDD style tests written in cucumber
 * [Gomicro Service](https://github.com/gomicro/service) - used to bootstrap service (dockerfile, docker-compose, minimal running go service)
 * [UUID](https://github.com/google/uuid) - used to facilitate uuid parsing
+* [Goblin](https://github.com/franela/goblin) - used for organizing unit tests and better report output
+* [Gomega](https://github.com/onsi/gomega) - used for a convenient set of assertion matchers in tests
+* [SQLMock](https://github.com/DATA-DOG/go-sqlmock) - used for mocking the database and enable unit testing of database calls
 
 ## Notes
 

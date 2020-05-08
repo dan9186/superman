@@ -12,4 +12,5 @@ require (
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/mattn/go-sqlite3 v2.0.3+incompatible
 	github.com/onsi/gomega v1.10.0
+	gopkg.in/DATA-DOG/go-sqlmock.v1 v1.3.0
 )
