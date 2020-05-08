@@ -4,12 +4,15 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
+	"net"
 	"testing"
 	"time"
 
 	"github.com/franela/goblin"
 	. "github.com/onsi/gomega"
 	"gopkg.in/DATA-DOG/go-sqlmock.v1"
+
+	"github.com/dan9186/superman/georesolver"
 )
 
 func TestConfig(t *testing.T) {
@@ -67,6 +70,47 @@ func TestConfig(t *testing.T) {
 				err := e.Store(mockDB)
 				Expect(err).NotTo(BeNil())
 				Expect(err.Error()).To(ContainSubstring("some bad thing with the DB"))
+			})
+		})
+
+		g.Describe("Geo Location", func() {
+			g.It("should resolve an events location", func() {
+				mock := georesolver.MockGeoDB{
+					ExpectedIP: net.ParseIP("206.81.252.6"),
+					Radius:     20,
+					Latitude:   42.4242,
+					Longitude:  42.4242,
+				}
+
+				var e Event
+				json.Unmarshal([]byte(validLoginEvent), &e)
+
+				c, err := e.ResolveLocation(mock)
+				Expect(err).To(BeNil())
+				Expect(c.Latitude).To(Equal(42.4242))
+				Expect(c.Longitude).To(Equal(42.4242))
+				Expect(c.Radius).To(Equal(20))
+			})
+		})
+
+		g.Describe("Analysis", func() {
+			g.It("should analyze a single event", func() {
+				mockGeoDB := georesolver.MockGeoDB{
+					ExpectedIP: net.ParseIP("206.81.252.6"),
+					Radius:     20,
+					Latitude:   42.4242,
+					Longitude:  42.4242,
+				}
+
+				var e Event
+				json.Unmarshal([]byte(validLoginEvent), &e)
+
+				a, err := e.Analyze(mockGeoDB)
+				Expect(err).To(BeNil())
+
+				Expect(a.CurrentLocation.Latitude).To(Equal(42.4242))
+				Expect(a.CurrentLocation.Longitude).To(Equal(42.4242))
+				Expect(a.CurrentLocation.Radius).To(Equal(20))
 			})
 		})
 	})

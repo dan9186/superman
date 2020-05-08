@@ -36,7 +36,7 @@ func handleSomeEndpoint(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	a, err := e.Analyze()
+	a, err := e.Analyze(geodb)
 	if err != nil {
 		log.Errorf("failed to analyze event: %v", err.Error())
 		w.WriteHeader(http.StatusInternalServerError)
