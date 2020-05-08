@@ -118,27 +118,27 @@ Then("I can see the preceding access info") do
 
   ip = body['precedingIpAccess']['ip_address']
   expect(ip).not_to(be_nil(), "expected: ip field\ngot: field missing\nbody: #{body.inspect}")
-  expect(ip).to(eql("figure me out"))
+  expect(ip).to(eql("56.3.181.4"))
 
   speed = body['precedingIpAccess']['speed']
   expect(speed).not_to(be_nil(), "expected: speed field\ngot: field missing\nbody: #{body.inspect}")
-  expect(speed).to(eql("figure me out"))
+  expect(speed).to(eql(0))
 
   lat = body['precedingIpAccess']['lat']
   expect(lat).not_to(be_nil(), "expected: lat field\ngot: field missing\nbody: #{body.inspect}")
-  expect(lat).to(eql("figure me out"))
+  expect(lat).to(eql(37.751))
 
   lon = body['precedingIpAccess']['lon']
   expect(lon).not_to(be_nil(), "expected: lon field\ngot: field missing\nbody: #{body.inspect}")
-  expect(lon).to(eql("figure me out"))
+  expect(lon).to(eql(-97.822))
 
   radius = body['precedingIpAccess']['radius']
   expect(radius).not_to(be_nil(), "expected: radius field\ngot: field missing\nbody: #{body.inspect}")
-  expect(radius).to(eql("figure me out"))
+  expect(radius).to(eql(1000))
 
   timestamp = body['precedingIpAccess']['timestamp']
   expect(timestamp).not_to(be_nil(), "expected: timestamp field\ngot: field missing\nbody: #{body.inspect}")
-  expect(timestamp).to(eql("figure me out"))
+  expect(timestamp).to(eql(@expected_preceding_event[:unix_timestamp]))
 end
 
 Then("I can see the subsequent access info") do
@@ -149,25 +149,25 @@ Then("I can see the subsequent access info") do
 
   ip = body['subsequentIpAccess']['ip_address']
   expect(ip).not_to(be_nil(), "expected: ip field\ngot: field missing\nbody: #{body.inspect}")
-  expect(ip).to(eql("figure me out"))
+  expect(ip).to(eql("36.12.93.24"))
 
   speed = body['subsequentIpAccess']['speed']
   expect(speed).not_to(be_nil(), "expected: speed field\ngot: field missing\nbody: #{body.inspect}")
-  expect(speed).to(eql("figure me out"))
+  expect(speed).to(eql(0))
 
   lat = body['subsequentIpAccess']['lat']
   expect(lat).not_to(be_nil(), "expected: lat field\ngot: field missing\nbody: #{body.inspect}")
-  expect(lat).to(eql("figure me out"))
+  expect(lat).to(eql(35.705))
 
   lon = body['subsequentIpAccess']['lon']
   expect(lon).not_to(be_nil(), "expected: lon field\ngot: field missing\nbody: #{body.inspect}")
-  expect(lon).to(eql("figure me out"))
+  expect(lon).to(eql(139.7496))
 
   radius = body['subsequentIpAccess']['radius']
   expect(radius).not_to(be_nil(), "expected: radius field\ngot: field missing\nbody: #{body.inspect}")
-  expect(radius).to(eql("figure me out"))
+  expect(radius).to(eql(500))
 
   timestamp = body['subsequentIpAccess']['timestamp']
   expect(timestamp).not_to(be_nil(), "expected: timestamp field\ngot: field missing\nbody: #{body.inspect}")
-  expect(timestamp).to(eql("figure me out"))
+  expect(timestamp).to(eql(@expected_subsequent_event[:unix_timestamp]))
 end
