@@ -46,6 +46,7 @@ make help
 * [Goblin](https://github.com/franela/goblin) - used for organizing unit tests and better report output
 * [Gomega](https://github.com/onsi/gomega) - used for a convenient set of assertion matchers in tests
 * [SQLMock](https://github.com/DATA-DOG/go-sqlmock) - used for mocking the database and enable unit testing of database calls
+* [GeoIP2]("github.com/oschwald/geoip2-golang") - used for reading the geoip2 data and parsing results
 
 ## Notes
 
