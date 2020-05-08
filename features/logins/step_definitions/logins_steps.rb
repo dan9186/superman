@@ -19,7 +19,19 @@ Then('I can see the contextual info about the event') do
   expect(body).not_to(be_nil(), 'expected: json body not nil\ngot: json body nil')
 
   expect(body['currentGeo']).not_to(be_nil(), "expected: currentGeo field\ngot: field missing\nbody: #{body.inspect}")
-  expect(body['currentGeo']['lat']).not_to(be_nil(), "expected: lat field\ngot: field missing\nbody: #{body.inspect}")
-  expect(body['currentGeo']['lon']).not_to(be_nil(), "expected: lon field\ngot: field missing\nbody: #{body.inspect}")
-  expect(body['currentGeo']['radius']).not_to(be_nil(), "expected: radius field\ngot: field missing\nbody: #{body.inspect}")
+
+  lat = body['currentGeo']['lat']
+  expect(lat).not_to(be_nil(), "expected: lat field\ngot: field missing\nbody: #{body.inspect}")
+  expect(lat).to(eql(38.9206))
+
+  lon = body['currentGeo']['lon']
+  expect(lon).not_to(be_nil(), "expected: lon field\ngot: field missing\nbody: #{body.inspect}")
+  expect(lon).to(eql(-76.8787))
+
+  radius = body['currentGeo']['radius']
+  expect(radius).not_to(be_nil(), "expected: radius field\ngot: field missing\nbody: #{body.inspect}")
+  expect(radius).to(eql(1000))
+
+  expect(body['travelToCurrentGeoSuspicious']).to(eql(false))
+  expect(body['travelFromCurrentGeoSuspicious']).to(eql(false))
 end

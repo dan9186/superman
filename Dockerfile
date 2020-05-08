@@ -14,6 +14,7 @@ FROM ubuntu
 
 COPY --from=0 /service service
 COPY --from=gomicro/probe /probe probe
+ADD ./ext/geoip2/GeoLite2-City.mmdb.tar.gz /
 
 EXPOSE 4567
 
