@@ -95,6 +95,15 @@ func TestConfig(t *testing.T) {
 
 		g.Describe("Analysis", func() {
 			g.It("should analyze a single event", func() {
+				mockDB, mockAsserts, _ := sqlmock.New()
+
+				mockAsserts.ExpectQuery(`SELECT uuid, timestamp, ip_address FROM logins WHERE username = (.*) AND timestamp < (.*) ORDER BY timestamp DESC LIMIT 1`).
+					WithArgs("bob", 1514764800).
+					WillReturnRows(
+						sqlmock.NewRows([]string{"uuid", "timestamp", "ip_address"}).
+							AddRow("4e837b27-2005-4dbb-8f7e-f32c6c2af699", "1588930045", "91.207.175.104"),
+					)
+
 				mockGeoDB := georesolver.MockGeoDB{
 					ExpectedIP: net.ParseIP("206.81.252.6"),
 					Radius:     20,
@@ -105,7 +114,7 @@ func TestConfig(t *testing.T) {
 				var e Event
 				json.Unmarshal([]byte(validLoginEvent), &e)
 
-				a, err := e.Analyze(mockGeoDB)
+				a, err := e.Analyze(mockDB, mockGeoDB)
 				Expect(err).To(BeNil())
 
 				Expect(a.CurrentLocation.Latitude).To(Equal(42.4242))
