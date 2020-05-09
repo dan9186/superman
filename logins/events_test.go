@@ -15,7 +15,7 @@ import (
 	"github.com/dan9186/superman/georesolver"
 )
 
-func TestConfig(t *testing.T) {
+func TestEvents(t *testing.T) {
 	g := goblin.Goblin(t)
 	RegisterFailHandler(func(m string, _ ...int) { g.Fail(m) })
 
