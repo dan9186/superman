@@ -50,6 +50,7 @@ func (e *Event) Analyze(db *sql.DB, geodb georesolver.GeoResolver) (*Analysis, e
 		}
 
 		analysis.PrecedingAccess = pAccess
+		analysis.SuspiciousPrecedingAccess = pAccess.Speed > 500
 	}
 
 	se, err := e.getSubsequent(db)
@@ -64,6 +65,7 @@ func (e *Event) Analyze(db *sql.DB, geodb georesolver.GeoResolver) (*Analysis, e
 		}
 
 		analysis.SubsequentAccess = sAccess
+		analysis.SuspiciiousSubsequentAccess = sAccess.Speed > 500
 	}
 
 	return analysis, nil
