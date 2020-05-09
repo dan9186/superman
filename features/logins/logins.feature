@@ -49,3 +49,22 @@ Feature:
     When the event is submitted
     Then I can see the contextual info about the event
     And I can see the closest subsequent access info
+
+  Scenario: A suspicious preceding event
+    Given a login event
+    And a suspicious preceding login event
+    When the event is submitted
+    Then I can see the preceding event is suspicious
+
+  Scenario: A suspicious preceding event
+    Given a login event
+    And a suspicious subsequent login event
+    When the event is submitted
+    Then I can see the suspicious event is suspicious
+
+  Scenario: A suspicious preceding event
+    Given a login event
+    And a suspicious preceding login event
+    And a suspicious subsequent login event
+    When the event is submitted
+    Then I can see the event preceding event is suspicious
