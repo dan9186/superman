@@ -115,6 +115,42 @@ Given("multiple subsequent login events") do
   @expected_event = expected_event
 end
 
+Given("a suspicious preceding login event") do
+  time = @expected_event[:unix_timestamp] - 1
+
+  @expected_preceding_event = {
+    "username": "cuketest",
+    "unix_timestamp": time,
+    "event_uuid": SecureRandom.uuid,
+    "ip_address": "66.39.178.22", #Bend, OR
+  }
+
+  expected_event = @expected_event
+  @expected_event = @expected_preceding_event
+  steps %{
+    When the event is submitted
+  }
+  @expected_event = expected_event
+end
+
+Given("a suspicious subsequent login event") do
+  time = @expected_event[:unix_timestamp] + 1
+
+  @expected_subsequent_event = {
+    "username": "cuketest",
+    "unix_timestamp": time,
+    "event_uuid": SecureRandom.uuid,
+    "ip_address": "47.39.62.215", #Seaside, OR
+  }
+
+  expected_event = @expected_event
+  @expected_event = @expected_subsequent_event
+  steps %{
+    When the event is submitted
+  }
+  @expected_event = expected_event
+end
+
 # Whens
 When(/^the event is submitted with the (.*)$/) do |ip_address|
   @expected_event['ip_address'] = ip_address
@@ -250,6 +286,33 @@ Then("I can see the closest subsequent access info") do
     steps %{
       Then I can see the subsequent access info
     }
+end
+
+Then("I can see the preceding event is suspicious") do
+  expect(@response.code.to_i).to(eql(201))
+  expect(@response.body).not_to(be_nil(), 'expected: body not nil\ngot: body nil')
+
+  body = JSON.parse(@response.body)
+  expect(body['travelToCurrentGeoSuspicious']).to(eql(true), "expected: false\ngot: true\nfield: travelToCurrentGeoSuspicious\n")
+  expect(body['travelFromCurrentGeoSuspicious']).to(eql(false), "expected: false\ngot: true\nfield: travelFromCurrentGeoSuspicious\n")
+end
+
+Then("I can see the suspicious event is suspicious") do
+  expect(@response.code.to_i).to(eql(201))
+  expect(@response.body).not_to(be_nil(), 'expected: body not nil\ngot: body nil')
+
+  body = JSON.parse(@response.body)
+  expect(body['travelToCurrentGeoSuspicious']).to(eql(false), "expected: false\ngot: true\nfield: travelToCurrentGeoSuspicious\n")
+  expect(body['travelFromCurrentGeoSuspicious']).to(eql(true), "expected: false\ngot: true\nfield: travelFromCurrentGeoSuspicious\n")
+end
+
+Then("I can see the event preceding event is suspicious") do
+  expect(@response.code.to_i).to(eql(201))
+  expect(@response.body).not_to(be_nil(), 'expected: body not nil\ngot: body nil')
+
+  body = JSON.parse(@response.body)
+  expect(body['travelToCurrentGeoSuspicious']).to(eql(true), "expected: false\ngot: true\nfield: travelToCurrentGeoSuspicious\n")
+  expect(body['travelFromCurrentGeoSuspicious']).to(eql(true), "expected: false\ngot: true\nfield: travelFromCurrentGeoSuspicious\n")
 end
 
 After do
