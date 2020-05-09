@@ -49,7 +49,10 @@ func (e *Event) Analyze(db *sql.DB, geodb georesolver.GeoResolver) (*Analysis, e
 			return nil, fmt.Errorf("failed to convert preceding event to ip access: %v", err.Error())
 		}
 
+		pAccess.CalculateSpeed(loc, e.UnixTimestamp)
+
 		analysis.PrecedingAccess = pAccess
+		analysis.SuspiciousPrecedingAccess = pAccess.Speed > 500
 	}
 
 	se, err := e.getSubsequent(db)
@@ -63,7 +66,10 @@ func (e *Event) Analyze(db *sql.DB, geodb georesolver.GeoResolver) (*Analysis, e
 			return nil, fmt.Errorf("failed to convert subsequent event to ip access: %v", err.Error())
 		}
 
+		sAccess.CalculateSpeed(loc, e.UnixTimestamp)
+
 		analysis.SubsequentAccess = sAccess
+		analysis.SuspiciiousSubsequentAccess = sAccess.Speed > 500
 	}
 
 	return analysis, nil

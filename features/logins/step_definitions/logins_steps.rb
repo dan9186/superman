@@ -7,18 +7,18 @@ Given('a login event') do
     "username": "cuketest",
     "unix_timestamp": Time.now.to_i,
     "event_uuid": SecureRandom.uuid,
-    "ip_address": "4.4.4.4",
+    "ip_address": "67.171.166.100", #West Linn, OR
   }
 end
 
 Given("a preceding login event") do
-  time = @expected_event[:unix_timestamp] - rand(1..100)
+  time = @expected_event[:unix_timestamp] - 3600
 
   @expected_preceding_event = {
     "username": "cuketest",
     "unix_timestamp": time,
     "event_uuid": SecureRandom.uuid,
-    "ip_address": "56.3.181.4",
+    "ip_address": "66.39.178.22", #Bend, OR
   }
 
   expected_event = @expected_event
@@ -30,13 +30,13 @@ Given("a preceding login event") do
 end
 
 Given("a subsequent login event") do
-  time = @expected_event[:unix_timestamp] + rand(1..100)
+  time = @expected_event[:unix_timestamp] + 3600
 
   @expected_subsequent_event = {
     "username": "cuketest",
     "unix_timestamp": time,
     "event_uuid": SecureRandom.uuid,
-    "ip_address": "36.12.93.24",
+    "ip_address": "47.39.62.215", #Seaside, OR
   }
 
   expected_event = @expected_event
@@ -48,7 +48,7 @@ Given("a subsequent login event") do
 end
 
 Given("multiple preceding login events") do
-  time = @expected_event[:unix_timestamp] - rand(50..100)
+  time = @expected_event[:unix_timestamp] - 4000
 
   older_preceding_event = {
     "username": "cuketest",
@@ -64,13 +64,13 @@ Given("multiple preceding login events") do
   }
   @expected_event = expected_event
 
-  time = @expected_event[:unix_timestamp] - rand(1..49)
+  time = @expected_event[:unix_timestamp] - 3600
 
   @expected_preceding_event = {
     "username": "cuketest",
     "unix_timestamp": time,
     "event_uuid": SecureRandom.uuid,
-    "ip_address": "56.3.181.4",
+    "ip_address": "66.39.178.22", #Bend, OR
   }
 
   expected_event = @expected_event
@@ -82,7 +82,7 @@ Given("multiple preceding login events") do
 end
 
 Given("multiple subsequent login events") do
-  time = @expected_event[:unix_timestamp] + rand(50..100)
+  time = @expected_event[:unix_timestamp] + 4000
 
   older_subsequent_event = {
     "username": "cuketest",
@@ -98,13 +98,13 @@ Given("multiple subsequent login events") do
   }
   @expected_event = expected_event
 
-  time = @expected_event[:unix_timestamp] + rand(1..49)
+  time = @expected_event[:unix_timestamp] + 3600
 
   @expected_subsequent_event = {
     "username": "cuketest",
     "unix_timestamp": time,
     "event_uuid": SecureRandom.uuid,
-    "ip_address": "36.12.93.24",
+    "ip_address": "47.39.62.215", #Seaside, OR
   }
 
   expected_event = @expected_event
@@ -149,8 +149,8 @@ Then('I can see the contextual info about the event includes {float}, {float}, a
   expect(rad).not_to(be_nil(), "expected: radius field\ngot: field missing\nbody: #{body.inspect}")
   expect(rad).to(eql(radius))
 
-  expect(body['travelToCurrentGeoSuspicious']).to(eql(false))
-  expect(body['travelFromCurrentGeoSuspicious']).to(eql(false))
+  expect(body['travelToCurrentGeoSuspicious']).to(eql(false), "expected: false\ngot: true\nfield: travelToCurrentGeoSuspicious\n")
+  expect(body['travelFromCurrentGeoSuspicious']).to(eql(false), "expected: false\ngot: true\nfield: travelFromCurrentGeoSuspicious\n")
 end
 
 Then("I can see the contextual info about the event") do
@@ -164,18 +164,18 @@ Then("I can see the contextual info about the event") do
 
   lat = body['currentGeo']['lat']
   expect(lat).not_to(be_nil(), "expected: lat field\ngot: field missing\nbody: #{body.inspect}")
-  expect(lat).to(eql(37.751))
+  expect(lat).to(eql(45.3642))
 
   lon = body['currentGeo']['lon']
   expect(lon).not_to(be_nil(), "expected: lon field\ngot: field missing\nbody: #{body.inspect}")
-  expect(lon).to(eql(-97.822))
+  expect(lon).to(eql(-122.6443))
 
   rad = body['currentGeo']['radius']
   expect(rad).not_to(be_nil(), "expected: radius field\ngot: field missing\nbody: #{body.inspect}")
-  expect(rad).to(eql(1000))
+  expect(rad).to(eql(5))
 
-  expect(body['travelToCurrentGeoSuspicious']).to(eql(false))
-  expect(body['travelFromCurrentGeoSuspicious']).to(eql(false))
+  expect(body['travelToCurrentGeoSuspicious']).to(eql(false), "expected: false\ngot: true\nfield: travelToCurrentGeoSuspicious\n")
+  expect(body['travelFromCurrentGeoSuspicious']).to(eql(false), "expected: false\ngot: true\nfield: travelFromCurrentGeoSuspicious\n")
 end
 
 Then("I can see the preceding access info") do
@@ -186,23 +186,23 @@ Then("I can see the preceding access info") do
 
   ip = body['precedingIpAccess']['ip_address']
   expect(ip).not_to(be_nil(), "expected: ip field\ngot: field missing\nbody: #{body.inspect}")
-  expect(ip).to(eql("56.3.181.4"))
+  expect(ip).to(eql("66.39.178.22"))
 
   speed = body['precedingIpAccess']['speed']
   expect(speed).not_to(be_nil(), "expected: speed field\ngot: field missing\nbody: #{body.inspect}")
-  expect(speed).to(eql(0))
+  expect(speed).to(eql(98))
 
   lat = body['precedingIpAccess']['lat']
   expect(lat).not_to(be_nil(), "expected: lat field\ngot: field missing\nbody: #{body.inspect}")
-  expect(lat).to(eql(37.751))
+  expect(lat).to(eql(44.0185))
 
   lon = body['precedingIpAccess']['lon']
   expect(lon).not_to(be_nil(), "expected: lon field\ngot: field missing\nbody: #{body.inspect}")
-  expect(lon).to(eql(-97.822))
+  expect(lon).to(eql(-121.2984))
 
   radius = body['precedingIpAccess']['radius']
   expect(radius).not_to(be_nil(), "expected: radius field\ngot: field missing\nbody: #{body.inspect}")
-  expect(radius).to(eql(1000))
+  expect(radius).to(eql(10))
 
   timestamp = body['precedingIpAccess']['timestamp']
   expect(timestamp).not_to(be_nil(), "expected: timestamp field\ngot: field missing\nbody: #{body.inspect}")
@@ -217,23 +217,23 @@ Then("I can see the subsequent access info") do
 
   ip = body['subsequentIpAccess']['ip_address']
   expect(ip).not_to(be_nil(), "expected: ip field\ngot: field missing\nbody: #{body.inspect}")
-  expect(ip).to(eql("36.12.93.24"))
+  expect(ip).to(eql("47.39.62.215"))
 
   speed = body['subsequentIpAccess']['speed']
   expect(speed).not_to(be_nil(), "expected: speed field\ngot: field missing\nbody: #{body.inspect}")
-  expect(speed).to(eql(0))
+  expect(speed).to(eql(50))
 
   lat = body['subsequentIpAccess']['lat']
   expect(lat).not_to(be_nil(), "expected: lat field\ngot: field missing\nbody: #{body.inspect}")
-  expect(lat).to(eql(35.705))
+  expect(lat).to(eql(45.9937))
 
   lon = body['subsequentIpAccess']['lon']
   expect(lon).not_to(be_nil(), "expected: lon field\ngot: field missing\nbody: #{body.inspect}")
-  expect(lon).to(eql(139.7496))
+  expect(lon).to(eql(-123.9243))
 
   radius = body['subsequentIpAccess']['radius']
   expect(radius).not_to(be_nil(), "expected: radius field\ngot: field missing\nbody: #{body.inspect}")
-  expect(radius).to(eql(500))
+  expect(radius).to(eql(20))
 
   timestamp = body['subsequentIpAccess']['timestamp']
   expect(timestamp).not_to(be_nil(), "expected: timestamp field\ngot: field missing\nbody: #{body.inspect}")
