@@ -37,7 +37,7 @@ func TestLocation(t *testing.T) {
 			}
 
 			d := l1.Distance(l2)
-			Expect(d).To(Equal(918.99))
+			Expect(d).To(Equal(919.489))
 		})
 	})
 }
