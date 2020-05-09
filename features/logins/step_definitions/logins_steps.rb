@@ -47,6 +47,74 @@ Given("a subsequent login event") do
   @expected_event = expected_event
 end
 
+Given("multiple preceding login events") do
+  time = @expected_event[:unix_timestamp] - rand(50..100)
+
+  older_preceding_event = {
+    "username": "cuketest",
+    "unix_timestamp": time,
+    "event_uuid": SecureRandom.uuid,
+    "ip_address": "3.39.21.4",
+  }
+
+  expected_event = @expected_event
+  @expected_event = older_preceding_event
+  steps %{
+    When the event is submitted
+  }
+  @expected_event = expected_event
+
+  time = @expected_event[:unix_timestamp] - rand(1..49)
+
+  @expected_preceding_event = {
+    "username": "cuketest",
+    "unix_timestamp": time,
+    "event_uuid": SecureRandom.uuid,
+    "ip_address": "56.3.181.4",
+  }
+
+  expected_event = @expected_event
+  @expected_event = @expected_preceding_event
+  steps %{
+    When the event is submitted
+  }
+  @expected_event = expected_event
+end
+
+Given("multiple subsequent login events") do
+  time = @expected_event[:unix_timestamp] + rand(50..100)
+
+  older_subsequent_event = {
+    "username": "cuketest",
+    "unix_timestamp": time,
+    "event_uuid": SecureRandom.uuid,
+    "ip_address": "4.181.56.3",
+  }
+
+  expected_event = @expected_event
+  @expected_event = older_subsequent_event
+  steps %{
+    When the event is submitted
+  }
+  @expected_event = expected_event
+
+  time = @expected_event[:unix_timestamp] + rand(1..49)
+
+  @expected_subsequent_event = {
+    "username": "cuketest",
+    "unix_timestamp": time,
+    "event_uuid": SecureRandom.uuid,
+    "ip_address": "36.12.93.24",
+  }
+
+  expected_event = @expected_event
+  @expected_event = @expected_subsequent_event
+  steps %{
+    When the event is submitted
+  }
+  @expected_event = expected_event
+end
+
 # Whens
 When(/^the event is submitted with the (.*)$/) do |ip_address|
   @expected_event['ip_address'] = ip_address
@@ -170,6 +238,18 @@ Then("I can see the subsequent access info") do
   timestamp = body['subsequentIpAccess']['timestamp']
   expect(timestamp).not_to(be_nil(), "expected: timestamp field\ngot: field missing\nbody: #{body.inspect}")
   expect(timestamp).to(eql(@expected_subsequent_event[:unix_timestamp]))
+end
+
+Then("I can see the closest preceding access info") do
+    steps %{
+      Then I can see the preceding access info
+    }
+end
+
+Then("I can see the closest subsequent access info") do
+    steps %{
+      Then I can see the subsequent access info
+    }
 end
 
 After do
