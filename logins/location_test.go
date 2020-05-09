@@ -38,6 +38,36 @@ func TestLocation(t *testing.T) {
 
 			d := l1.Distance(l2)
 			Expect(d).To(Equal(919.489))
+
+			// Bend, OR
+			l1 = &Location{
+				Latitude:  44.0591,
+				Longitude: -121.3057,
+			}
+
+			// Santa Fe, Argentina
+			l2 = &Location{
+				Latitude:  -31.6796,
+				Longitude: -60.6422,
+			}
+
+			d = l1.Distance(l2)
+			Expect(d).To(Equal(6478.3509))
+
+			// Melbourne, Australia
+			l1 = &Location{
+				Latitude:  -37.8086,
+				Longitude: 144.9166,
+			}
+
+			// London, UK
+			l2 = &Location{
+				Latitude:  51.4884,
+				Longitude: -0.116,
+			}
+
+			d = l1.Distance(l2)
+			Expect(d).To(Equal(10501.3591))
 		})
 	})
 }
