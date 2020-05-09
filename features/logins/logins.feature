@@ -35,3 +35,17 @@ Feature:
     Then I can see the contextual info about the event
     And I can see the preceding access info
     And I can see the subsequent access info
+
+  Scenario: Multiple preceding events are sent
+    Given a login event
+    And multiple preceding login events
+    When the event is submitted
+    Then I can see the contextual info about the event
+    And I can see the closest preceding access info
+
+  Scenario: Multiple subsequent events are sent
+    Given a login event
+    And multiple subsequent login events
+    When the event is submitted
+    Then I can see the contextual info about the event
+    And I can see the closest subsequent access info

@@ -1,6 +1,7 @@
 SHELL = bash
 
 APP := $(shell basename $(PWD) | tr '[:upper:]' '[:lower:]')
+TTY := $(shell if [ -z $$CI ]; then echo "-t"; fi)
 
 GIT_COMMIT_HASH ?= $(shell git rev-parse HEAD)
 GIT_SHORT_COMMIT_HASH := $(shell git rev-parse --short HEAD)
@@ -58,4 +59,4 @@ unit_test: ## Run unit tests
 
 .PHONY: functional_test
 functional_test: ## Runs the functional tests against the running service
-	docker run -i -v $$PWD/features:/usr/app/features --network=$(APP)_services gomicro/cucumber cucumber $$CUKE_TAGS
+	docker run -i $(TTY) -v $$PWD/features:/usr/app/features --network=$(APP)_services gomicro/cucumber cucumber $$CUKE_TAGS
