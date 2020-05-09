@@ -187,7 +187,8 @@ func registerEndpoints() http.Handler {
 
 	r.Use(log.EndpointInfo)
 
-	r.HandleFunc("/v1/event", handleSomeEndpoint)
+	r.HandleFunc("/v1/event", handleEvent).Methods("POST")
+	r.HandleFunc("/v1/cleanup", handleCleanup).Methods("DELETE")
 
 	return r
 }

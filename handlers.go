@@ -8,7 +8,7 @@ import (
 	"github.com/dan9186/superman/logins"
 )
 
-func handleSomeEndpoint(w http.ResponseWriter, r *http.Request) {
+func handleEvent(w http.ResponseWriter, r *http.Request) {
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		log.Errorf("failed to read message body: %v", err.Error())
@@ -36,7 +36,7 @@ func handleSomeEndpoint(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	a, err := e.Analyze(geodb)
+	a, err := e.Analyze(db, geodb)
 	if err != nil {
 		log.Errorf("failed to analyze event: %v", err.Error())
 		w.WriteHeader(http.StatusInternalServerError)
@@ -54,4 +54,16 @@ func handleSomeEndpoint(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusCreated)
 	w.Write(resp)
+}
+
+func handleCleanup(w http.ResponseWriter, r *http.Request) {
+	err := logins.Cleanup(db)
+	if err != nil {
+		log.Errorf("failed to cleanup test data: %v", err.Error())
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte("failed to cleanup test data"))
+		return
+	}
+
+	w.WriteHeader(http.StatusNoContent)
 }

@@ -18,3 +18,7 @@ end
 def post(endpoint, body)
   return do_req(endpoint, Net::HTTP::Post, body)
 end
+
+def delete(endpoint)
+  return do_req(endpoint, Net::HTTP::Delete, nil)
+end

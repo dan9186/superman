@@ -12,7 +12,9 @@ import (
 )
 
 const (
-	insertLoginEvent = `INSERT INTO logins (uuid, username, timestamp, ip_address) VALUES($1, $2, $3, $4)`
+	insertLoginEvent      = `INSERT INTO logins (uuid, username, timestamp, ip_address) VALUES($1, $2, $3, $4)`
+	selectPrecedingEvent  = `SELECT uuid, timestamp, ip_address FROM logins WHERE username = $1 AND timestamp < $2 ORDER BY timestamp DESC LIMIT 1`
+	selectSubsequentEvent = `SELECT uuid, timestamp, ip_address FROM logins WHERE username = $1 AND timestamp > $2 ORDER BY timestamp ASC LIMIT 1`
 )
 
 // Event represents a singular login event for a given user at a given time and
@@ -26,17 +28,93 @@ type Event struct {
 
 // Analyze looks up comparative details of a login event and provides an
 // Analysis of the comparative details.
-func (e *Event) Analyze(geodb georesolver.GeoResolver) (*Analysis, error) {
+func (e *Event) Analyze(db *sql.DB, geodb georesolver.GeoResolver) (*Analysis, error) {
 	loc, err := e.ResolveLocation(geodb)
 	if err != nil {
 		return nil, fmt.Errorf("failed to resolve location: %v", err.Error())
 	}
 
-	a := &Analysis{
+	analysis := &Analysis{
 		CurrentLocation: loc,
 	}
 
-	return a, nil
+	pe, err := e.getPreceding(db)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get preceding event info: %v", err.Error())
+	}
+
+	if pe != nil {
+		pAccess, err := pe.toIPAccess(geodb)
+		if err != nil {
+			return nil, fmt.Errorf("failed to convert preceding event to ip access: %v", err.Error())
+		}
+
+		analysis.PrecedingAccess = pAccess
+	}
+
+	se, err := e.getSubsequent(db)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get subsequent event info: %v", err.Error())
+	}
+
+	if se != nil {
+		sAccess, err := se.toIPAccess(geodb)
+		if err != nil {
+			return nil, fmt.Errorf("failed to convert subsequent event to ip access: %v", err.Error())
+		}
+
+		analysis.SubsequentAccess = sAccess
+	}
+
+	return analysis, nil
+}
+
+func (e *Event) getPreceding(db *sql.DB) (*Event, error) {
+	var id uuid.UUID
+	var ipStr string
+	var unix int64
+
+	err := db.QueryRow(selectPrecedingEvent, e.Username, e.UnixTimestamp).Scan(&id, &unix, &ipStr)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, nil
+		}
+
+		return nil, fmt.Errorf("failed to query for preceding event: %v", err.Error())
+	}
+
+	pe := &Event{
+		Username:      e.Username,
+		ID:            id,
+		UnixTimestamp: unix,
+		IPAddress:     net.ParseIP(ipStr),
+	}
+
+	return pe, nil
+}
+
+func (e *Event) getSubsequent(db *sql.DB) (*Event, error) {
+	var id uuid.UUID
+	var ipStr string
+	var unix int64
+
+	err := db.QueryRow(selectSubsequentEvent, e.Username, e.UnixTimestamp).Scan(&id, &unix, &ipStr)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, nil
+		}
+
+		return nil, fmt.Errorf("failed to query for subsequent event: %v", err.Error())
+	}
+
+	se := &Event{
+		Username:      e.Username,
+		ID:            id,
+		UnixTimestamp: unix,
+		IPAddress:     net.ParseIP(ipStr),
+	}
+
+	return se, nil
 }
 
 // ResolveLocation uses an event's IP address to determine a geolocation and
@@ -73,4 +151,21 @@ func (e *Event) Store(db *sql.DB) error {
 	}
 
 	return nil
+}
+
+func (e *Event) toIPAccess(geodb georesolver.GeoResolver) (*IPAccess, error) {
+	loc, err := e.ResolveLocation(geodb)
+	if err != nil {
+		return nil, fmt.Errorf("failed to resolve location for preceding event: %v", err.Error())
+	}
+
+	a := &IPAccess{
+		IPAddress:     e.IPAddress,
+		UnixTimestamp: e.UnixTimestamp,
+		Latitude:      loc.Latitude,
+		Longitude:     loc.Longitude,
+		Radius:        loc.Radius,
+	}
+
+	return a, nil
 }
