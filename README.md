@@ -48,13 +48,13 @@ make help
 
 ## Resources Used
 
-* [Gomicro Cucumber Docker Image](https://github.com/gomicro/docker-cucumber) - used to execute BDD style tests written in cucumber
-* [Gomicro Service](https://github.com/gomicro/service) - used to bootstrap service (dockerfile, docker-compose, minimal running go service)
-* [UUID](https://github.com/google/uuid) - used to facilitate uuid parsing
+* [GeoIP2]("github.com/oschwald/geoip2-golang") - used for reading the geoip2 data and parsing results
 * [Goblin](https://github.com/franela/goblin) - used for organizing unit tests and better report output
 * [Gomega](https://github.com/onsi/gomega) - used for a convenient set of assertion matchers in tests
+* [Gomicro Cucumber Docker Image](https://github.com/gomicro/docker-cucumber) - used to execute BDD style tests written in cucumber
+* [Gomicro Service](https://github.com/gomicro/service) - used to bootstrap service (dockerfile, docker-compose, minimal running go service)
 * [SQLMock](https://github.com/DATA-DOG/go-sqlmock) - used for mocking the database and enable unit testing of database calls
-* [GeoIP2]("github.com/oschwald/geoip2-golang") - used for reading the geoip2 data and parsing results
+* [UUID](https://github.com/google/uuid) - used to facilitate uuid parsing
 
 ## Notes
 
