@@ -56,13 +56,13 @@ Feature:
     When the event is submitted
     Then I can see the preceding event is suspicious
 
-  Scenario: A suspicious preceding event
+  Scenario: A suspicious subsequent event
     Given a login event
     And a suspicious subsequent login event
     When the event is submitted
     Then I can see the suspicious event is suspicious
 
-  Scenario: A suspicious preceding event
+  Scenario: A suspicious preceding and subsequent events
     Given a login event
     And a suspicious preceding login event
     And a suspicious subsequent login event
