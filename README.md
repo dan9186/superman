@@ -62,6 +62,12 @@ make help
 
 The geoIP lookup provides a radius as part of its results. Since a person could have performed a login event from anywhere within that radius around the provided location, the radius was used to reduce the minimum possible distance a person could have to travel between two login events. This was done in order to favor reducing false positives and only result in flagging suspicious activity that has a significantly higher chance of being truely suspicious.
 
+### Deployment
+
+Minor code changes would be needed to switch the service from using SQLite to a more production ready database such as Postgres. Mostly this would consist of the configuration needing to be updated, and the bootstrapping of the database could be moved out of the service and into a migration tool or other form of management independent of the service.
+
+Deployment would involve pushing the resulting docker image from `make build` to a docker image repository and then deploying that image as a service into a container orchestrator such as ECS (Elastic Container Service) or Kubernetes.
+
 ### SQLite Requirement
 
 Normally I would not use SQLite even for local development, as a significantly closer to deployed code setup can be accomplished with a postgres container.
