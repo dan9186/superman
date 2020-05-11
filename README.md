@@ -2,11 +2,11 @@
 [![Build](https://github.com/dan9186/superman/workflows/Build/badge.svg?branch=master)](https://github.com/dan9186/superman/actions?query=workflow%3ABuild)
 [![Go Reportcard](https://goreportcard.com/badge/github.com/dan9186/superman)](https://goreportcard.com/report/github.com/dan9186/superman)
 
-Superman takes in login events associated with a unix timestamp and an IP address. The provided information is used to reference a geolocation and provide back details of suspicous logins based on login activity over time.
+Superman takes in login events associated with a unix timestamp and an IP address. The provided information is used to reference a geolocation and provide back details of suspicious logins based on login activity over time.
 
 ## The Problem
 
-Given mulitiple login events from a single user, a user wants to know when their login events are not posible given normal human means. That is to say that if two login events are geographically separated by a distance and time that would require greater than 500 mph of travel, it is a high probability the same person didn't perform both login events and their account has been compromised.
+Given multiple login events from a single user, a user wants to know when their login events are not possible given normal human means. That is to say that if two login events are geographically separated by a distance and time that would require greater than 500 mph of travel, it is a high probability the same person didn't perform both login events and their account has been compromised.
 
 ## Development
 All steps below are run the same way they are in the build. The build may chain the steps slightly differently for the benefit of reporting, but otherwise does the same thing.
@@ -60,7 +60,7 @@ make help
 
 ### Decisions
 
-The geoIP lookup provides a radius as part of its results. Since a person could have performed a login event from anywhere within that radius around the provided location, the radius was used to reduce the minimum possible distance a person could have to travel between two login events. This was done in order to favor reducing false positives and only result in flagging suspicious activity that has a significantly higher chance of being truely suspicious.
+The geoIP lookup provides a radius as part of its results. Since a person could have performed a login event from anywhere within that radius around the provided location, the radius was used to reduce the minimum possible distance a person could have to travel between two login events. This was done in order to favor reducing false positives and only result in flagging suspicious activity that has a significantly higher chance of being truly suspicious.
 
 ### Deployment
 
@@ -70,7 +70,7 @@ Deployment would involve pushing the resulting docker image from `make build` to
 
 ### SQLite Requirement
 
-Normally I would not use SQLite even for local development, as a significantly closer to deployed code setup can be accomplished with a postgres container.
+Normally I would not use SQLite even for local development, as a significantly closer to deployed code setup can be accomplished with a Postgres container.
 
 Specific Items of Note:
 
