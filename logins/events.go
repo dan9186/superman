@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"fmt"
 	"net"
-	"time"
 
 	"github.com/google/uuid"
 
@@ -138,14 +137,6 @@ func (e *Event) ResolveLocation(geodb georesolver.GeoResolver) (*Location, error
 	}
 
 	return l, nil
-}
-
-// Timestamp retuns the unix timestamp of the event as a golang Time object. The
-// time will always be returned in UTC.
-func (e *Event) Timestamp() *time.Time {
-	t := time.Unix(e.UnixTimestamp, 0).UTC()
-
-	return &t
 }
 
 // Store takes a database object and stores the designated event in the
