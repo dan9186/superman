@@ -18,7 +18,7 @@ func TestLocation(t *testing.T) {
 				Longitude: -122.6533,
 			}
 
-			latRad, lonRad := l.Radians()
+			latRad, lonRad := l.radians()
 			Expect(latRad).To(Equal(0.7914))
 			Expect(lonRad).To(Equal(-2.1407))
 		})
