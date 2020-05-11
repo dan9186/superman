@@ -8,7 +8,7 @@ Superman takes in login events associated with a unix timestamp and an IP addres
 
 Given mulitiple login events from a single user, a user wants to know when their login events are not posible given normal human means. That is to say that if two login events are geographically separated by a distance and time that would require greater than 500 mph of travel, it is a high probability the same person didn't perform both login events and their account has been compromised.
 
-## Building
+## Development
 All steps below are run the same way they are in the build. The build may chain the steps slightly differently for the benefit of reporting, but otherwise does the same thing.
 
 ### Running
