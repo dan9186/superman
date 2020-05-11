@@ -16,6 +16,7 @@ func BootstrapLogins(db *sql.DB) error {
 	if err != nil {
 		return fmt.Errorf("failed to prepare login table creation: %v", err.Error())
 	}
+	defer stmt.Close()
 
 	_, err = stmt.Exec()
 	if err != nil {
