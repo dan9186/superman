@@ -11,6 +11,8 @@ import (
 )
 
 const (
+	suspiciousThreshold = 500
+
 	insertLoginEvent      = `INSERT INTO logins (uuid, username, timestamp, ip_address) VALUES($1, $2, $3, $4)`
 	selectPrecedingEvent  = `SELECT uuid, timestamp, ip_address FROM logins WHERE username = $1 AND timestamp < $2 ORDER BY timestamp DESC LIMIT 1`
 	selectSubsequentEvent = `SELECT uuid, timestamp, ip_address FROM logins WHERE username = $1 AND timestamp > $2 ORDER BY timestamp ASC LIMIT 1`
@@ -51,7 +53,7 @@ func (e *Event) Analyze(db *sql.DB, geodb georesolver.GeoResolver) (*Analysis, e
 		pAccess.CalculateSpeed(loc, e.UnixTimestamp)
 
 		analysis.PrecedingAccess = pAccess
-		analysis.SuspiciousPrecedingAccess = pAccess.Speed > 500
+		analysis.SuspiciousPrecedingAccess = pAccess.Speed > suspiciousThreshold
 	}
 
 	se, err := e.getSubsequent(db)
@@ -68,7 +70,7 @@ func (e *Event) Analyze(db *sql.DB, geodb georesolver.GeoResolver) (*Analysis, e
 		sAccess.CalculateSpeed(loc, e.UnixTimestamp)
 
 		analysis.SubsequentAccess = sAccess
-		analysis.SuspiciiousSubsequentAccess = sAccess.Speed > 500
+		analysis.SuspiciousSubsequentAccess = sAccess.Speed > suspiciousThreshold
 	}
 
 	return analysis, nil
