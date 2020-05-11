@@ -37,6 +37,70 @@ func TestEvents(t *testing.T) {
 				Expect(t.Hour()).To(Equal(0))
 				Expect(t.Minute()).To(Equal(0))
 			})
+
+			g.It("shouldn't include subsequent ip access details in the json if they don't exist", func() {
+				mockDB, mockAsserts, _ := sqlmock.New()
+
+				mockAsserts.ExpectQuery(`SELECT uuid, timestamp, ip_address FROM logins WHERE username = (.*) AND timestamp < (.*) ORDER BY timestamp DESC LIMIT 1`).
+					WithArgs("bob", 1514764800).
+					WillReturnRows(
+						sqlmock.NewRows([]string{"uuid", "timestamp", "ip_address"}).
+							AddRow("4e837b27-2005-4dbb-8f7e-f32c6c2af699", "1514764734", "91.207.175.104"),
+					)
+
+				mockAsserts.ExpectQuery(`SELECT uuid, timestamp, ip_address FROM logins WHERE username = (.*) AND timestamp > (.*) ORDER BY timestamp ASC LIMIT 1`).
+					WithArgs("bob", 1514764800).WillReturnError(sql.ErrNoRows)
+
+				mockGeoDB := georesolver.NewMock()
+
+				mockGeoDB.ExpectIP(net.ParseIP("206.81.252.6")).
+					WillReturnLocation(42.4242, 42.4242, 20)
+
+				mockGeoDB.ExpectIP(net.ParseIP("91.207.175.104")).
+					WillReturnLocation(32.3242, 32.3242, 20)
+
+				var e Event
+				json.Unmarshal([]byte(validLoginEvent), &e)
+
+				a, err := e.Analyze(mockDB, mockGeoDB)
+				Expect(err).To(BeNil())
+
+				b, err := json.Marshal(a)
+				Expect(string(b)).To(ContainSubstring("precedingIpAccess"))
+				Expect(string(b)).NotTo(ContainSubstring("subsequentIpAccess"))
+			})
+
+			g.It("shouldn't include preceding ip access details in the json if they don't exist", func() {
+				mockDB, mockAsserts, _ := sqlmock.New()
+
+				mockAsserts.ExpectQuery(`SELECT uuid, timestamp, ip_address FROM logins WHERE username = (.*) AND timestamp < (.*) ORDER BY timestamp DESC LIMIT 1`).
+					WithArgs("bob", 1514764800).WillReturnError(sql.ErrNoRows)
+
+				mockAsserts.ExpectQuery(`SELECT uuid, timestamp, ip_address FROM logins WHERE username = (.*) AND timestamp > (.*) ORDER BY timestamp ASC LIMIT 1`).
+					WithArgs("bob", 1514764800).
+					WillReturnRows(
+						sqlmock.NewRows([]string{"uuid", "timestamp", "ip_address"}).
+							AddRow("d99df0fd-3a77-4662-910f-9e4f8ecfe25b", "1588930045", "24.242.71.20"),
+					)
+
+				mockGeoDB := georesolver.NewMock()
+
+				mockGeoDB.ExpectIP(net.ParseIP("206.81.252.6")).
+					WillReturnLocation(42.4242, 42.4242, 20)
+
+				mockGeoDB.ExpectIP(net.ParseIP("24.242.71.20")).
+					WillReturnLocation(22.3242, 22.3242, 20)
+
+				var e Event
+				json.Unmarshal([]byte(validLoginEvent), &e)
+
+				a, err := e.Analyze(mockDB, mockGeoDB)
+				Expect(err).To(BeNil())
+
+				b, err := json.Marshal(a)
+				Expect(string(b)).NotTo(ContainSubstring("precedingIpAccess"))
+				Expect(string(b)).To(ContainSubstring("subsequentIpAccess"))
+			})
 		})
 
 		g.Describe("Database", func() {
