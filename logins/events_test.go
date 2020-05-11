@@ -30,7 +30,7 @@ func TestEvents(t *testing.T) {
 				Expect(e.ID.String()).To(Equal("85ad929a-db03-4bf4-9541-8f728fa12e42"))
 				Expect(e.IPAddress.String()).To(Equal("206.81.252.6"))
 
-				t := e.Timestamp()
+				t := time.Unix(e.UnixTimestamp, 0).UTC()
 				Expect(t.Year()).To(Equal(2018))
 				Expect(t.Month()).To(Equal(time.January))
 				Expect(t.Day()).To(Equal(1))
