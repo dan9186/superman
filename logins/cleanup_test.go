@@ -13,7 +13,7 @@ func TestCleanup(t *testing.T) {
 	RegisterFailHandler(func(m string, _ ...int) { g.Fail(m) })
 
 	g.Describe("Cleanup", func() {
-		g.It("should store a login event", func() {
+		g.It("should cleanup only cuketest users", func() {
 			mockDB, mockAsserts, _ := sqlmock.New()
 			mockAsserts.ExpectExec(`DELETE FROM logins WHERE username = 'cuketest'`).
 				WillReturnResult(sqlmock.NewResult(0, 1))
