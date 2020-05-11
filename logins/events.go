@@ -11,6 +11,8 @@ import (
 )
 
 const (
+	suspiciousThreshold = 500
+
 	insertLoginEvent      = `INSERT INTO logins (uuid, username, timestamp, ip_address) VALUES($1, $2, $3, $4)`
 	selectPrecedingEvent  = `SELECT uuid, timestamp, ip_address FROM logins WHERE username = $1 AND timestamp < $2 ORDER BY timestamp DESC LIMIT 1`
 	selectSubsequentEvent = `SELECT uuid, timestamp, ip_address FROM logins WHERE username = $1 AND timestamp > $2 ORDER BY timestamp ASC LIMIT 1`
@@ -51,7 +53,7 @@ func (e *Event) Analyze(db *sql.DB, geodb georesolver.GeoResolver) (*Analysis, e
 		pAccess.CalculateSpeed(loc, e.UnixTimestamp)
 
 		analysis.PrecedingAccess = pAccess
-		analysis.SuspiciousPrecedingAccess = pAccess.Speed > 500
+		analysis.SuspiciousPrecedingAccess = pAccess.Speed > suspiciousThreshold
 	}
 
 	se, err := e.getSubsequent(db)
@@ -68,42 +70,26 @@ func (e *Event) Analyze(db *sql.DB, geodb georesolver.GeoResolver) (*Analysis, e
 		sAccess.CalculateSpeed(loc, e.UnixTimestamp)
 
 		analysis.SubsequentAccess = sAccess
-		analysis.SuspiciiousSubsequentAccess = sAccess.Speed > 500
+		analysis.SuspiciousSubsequentAccess = sAccess.Speed > suspiciousThreshold
 	}
 
 	return analysis, nil
 }
 
 func (e *Event) getPreceding(db *sql.DB) (*Event, error) {
-	var id uuid.UUID
-	var ipStr string
-	var unix int64
-
-	err := db.QueryRow(selectPrecedingEvent, e.Username, e.UnixTimestamp).Scan(&id, &unix, &ipStr)
-	if err != nil {
-		if err == sql.ErrNoRows {
-			return nil, nil
-		}
-
-		return nil, fmt.Errorf("failed to query for preceding event: %v", err.Error())
-	}
-
-	pe := &Event{
-		Username:      e.Username,
-		ID:            id,
-		UnixTimestamp: unix,
-		IPAddress:     net.ParseIP(ipStr),
-	}
-
-	return pe, nil
+	return e.getEvent(selectPrecedingEvent, db)
 }
 
 func (e *Event) getSubsequent(db *sql.DB) (*Event, error) {
+	return e.getEvent(selectSubsequentEvent, db)
+}
+
+func (e *Event) getEvent(query string, db *sql.DB) (*Event, error) {
 	var id uuid.UUID
 	var ipStr string
 	var unix int64
 
-	err := db.QueryRow(selectSubsequentEvent, e.Username, e.UnixTimestamp).Scan(&id, &unix, &ipStr)
+	err := db.QueryRow(query, e.Username, e.UnixTimestamp).Scan(&id, &unix, &ipStr)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return nil, nil
@@ -150,10 +136,11 @@ func (e *Event) Store(db *sql.DB) error {
 	return nil
 }
 
+// Converts an event into an IPAccess struct
 func (e *Event) toIPAccess(geodb georesolver.GeoResolver) (*IPAccess, error) {
 	loc, err := e.ResolveLocation(geodb)
 	if err != nil {
-		return nil, fmt.Errorf("failed to resolve location for preceding event: %v", err.Error())
+		return nil, fmt.Errorf("failed to resolve location for event: %v", err.Error())
 	}
 
 	a := &IPAccess{

@@ -6,9 +6,9 @@ package logins
 // comparative details of the subsequent login event if it exists, and whether
 // or not the comparison of the events result in suspicious activity.
 type Analysis struct {
-	CurrentLocation             *Location `json:"currentGeo"`
-	PrecedingAccess             *IPAccess `json:"precedingIpAccess,omitempty"`
-	SuspiciousPrecedingAccess   bool      `json:"travelToCurrentGeoSuspicious"`
-	SubsequentAccess            *IPAccess `json:"subsequentIpAccess,omitempty"`
-	SuspiciiousSubsequentAccess bool      `json:"travelFromCurrentGeoSuspicious"`
+	CurrentLocation            *Location `json:"currentGeo"`
+	PrecedingAccess            *IPAccess `json:"precedingIpAccess,omitempty"`
+	SuspiciousPrecedingAccess  bool      `json:"travelToCurrentGeoSuspicious"`
+	SubsequentAccess           *IPAccess `json:"subsequentIpAccess,omitempty"`
+	SuspiciousSubsequentAccess bool      `json:"travelFromCurrentGeoSuspicious"`
 }
