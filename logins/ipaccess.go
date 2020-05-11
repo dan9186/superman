@@ -18,8 +18,12 @@ type IPAccess struct {
 
 // CalculateSpeed takes a location and corresponding timestamp for the location
 // to calculate the speed to travel between the location of the IPAccess and the
-// provided details. It updates the IPAccess record with the result in miles per
-// hour.
+// provided details. The radius of the IPAccess and the radius of the provided
+// location are used to reduce to reduce the total possible distance traveled
+// before calculating the speed. This is to reduce the possible false negatives
+// of a person who could have legitimately been on the inside edges of the two
+// locations. The resulting speed is updated back to the IPAccess speed field
+// and will be in miles per hour.
 func (ipa *IPAccess) CalculateSpeed(l *Location, timestamp int64) {
 	l2 := &Location{
 		Latitude:  ipa.Latitude,
