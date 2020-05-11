@@ -16,7 +16,11 @@ type Location struct {
 }
 
 // Distance calculates the distance from the calling location to the provided
-// location in miles.
+// location in miles. This uses the haversine formula for calculating distance
+// between two latitude and logitude points on a globe. Since the maximum
+// resolution of the provided locations from the geo IP database will be about 4
+// decimal places, all outputs will be rounded to a max of 4 decimal places as
+// well. See https://en.wikipedia.org/wiki/Haversine_formula
 func (l *Location) Distance(l2 *Location) float64 {
 	lat1, lon1 := l.Radians()
 	lat2, lon2 := l2.Radians()
