@@ -13,7 +13,7 @@ func TestIPAccess(t *testing.T) {
 	RegisterFailHandler(func(m string, _ ...int) { g.Fail(m) })
 
 	g.Describe("IP Access", func() {
-		g.It("should calculate the speed betweeen two locations", func() {
+		g.It("should calculate the speed between two locations", func() {
 			t := time.Now().Unix()
 
 			// West Linn, OR
@@ -55,7 +55,7 @@ func TestIPAccess(t *testing.T) {
 			Expect(ipa.Speed).To(Equal(70))
 		})
 
-		g.It("should not go below 0 distance", func() {
+		g.It("should not go below 0 distance when calculating speed", func() {
 			t := time.Now().Unix()
 
 			// West Linn, OR
