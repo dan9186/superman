@@ -136,10 +136,11 @@ func (e *Event) Store(db *sql.DB) error {
 	return nil
 }
 
+// Converts an event into an IPAccess struct
 func (e *Event) toIPAccess(geodb georesolver.GeoResolver) (*IPAccess, error) {
 	loc, err := e.ResolveLocation(geodb)
 	if err != nil {
-		return nil, fmt.Errorf("failed to resolve location for preceding event: %v", err.Error())
+		return nil, fmt.Errorf("failed to resolve location for event: %v", err.Error())
 	}
 
 	a := &IPAccess{
