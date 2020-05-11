@@ -160,7 +160,7 @@ When(/^the event is submitted with the (.*)$/) do |ip_address|
 end
 
 When("the event is submitted") do
-  @response = post('http://app:4567/v1/event', @expected_event)
+  @response = post('http://app:4567/v1/', @expected_event)
 end
 
 # Thens
