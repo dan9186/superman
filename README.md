@@ -1,4 +1,6 @@
 # Superman
+[![Build](https://github.com/dan9186/superman/workflows/Build/badge.svg?branch=master)](https://github.com/dan9186/superman/actions?query=workflow%3ABuild)
+[![Go Reportcard](https://goreportcard.com/badge/github.com/dan9186/superman)](https://goreportcard.com/report/github.com/dan9186/superman)
 
 ## Building
 All steps below are run the same way they are in the build. The build may chain the steps slightly differently for the benefit of reporting, but otherwise does the same thing.
