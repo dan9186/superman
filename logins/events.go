@@ -75,35 +75,19 @@ func (e *Event) Analyze(db *sql.DB, geodb georesolver.GeoResolver) (*Analysis, e
 }
 
 func (e *Event) getPreceding(db *sql.DB) (*Event, error) {
-	var id uuid.UUID
-	var ipStr string
-	var unix int64
-
-	err := db.QueryRow(selectPrecedingEvent, e.Username, e.UnixTimestamp).Scan(&id, &unix, &ipStr)
-	if err != nil {
-		if err == sql.ErrNoRows {
-			return nil, nil
-		}
-
-		return nil, fmt.Errorf("failed to query for preceding event: %v", err.Error())
-	}
-
-	pe := &Event{
-		Username:      e.Username,
-		ID:            id,
-		UnixTimestamp: unix,
-		IPAddress:     net.ParseIP(ipStr),
-	}
-
-	return pe, nil
+	return e.getEvent(selectPrecedingEvent, db)
 }
 
 func (e *Event) getSubsequent(db *sql.DB) (*Event, error) {
+	return e.getEvent(selectSubsequentEvent, db)
+}
+
+func (e *Event) getEvent(query string, db *sql.DB) (*Event, error) {
 	var id uuid.UUID
 	var ipStr string
 	var unix int64
 
-	err := db.QueryRow(selectSubsequentEvent, e.Username, e.UnixTimestamp).Scan(&id, &unix, &ipStr)
+	err := db.QueryRow(query, e.Username, e.UnixTimestamp).Scan(&id, &unix, &ipStr)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return nil, nil
