@@ -68,6 +68,11 @@ Minor code changes would be needed to switch the service from using SQLite to a 
 
 Deployment would involve pushing the resulting docker image from `make build` to a docker image repository and then deploying that image as a service into a container orchestrator such as ECS (Elastic Container Service) or Kubernetes.
 
+### Testing
+
+While a good set of checks can be provided by unit tests, not everything is best covered by them. It is possible to setup endpoint handlers in Go to be covered by unit tests, but the effort of setting up the mocks of a test server, database, and more start to outweigh the value of black box testing. The white box type of tests as just mentioned majorly only provide value in testing states that are more rare occurrences and with idiomatic Go error handling, are at least handled. As such, I have chosen to address coverage of the endpoints with BDD style tests which do a better job of articulating the desired feature in user centric terms rather than highly technical descriptions. This drives better empathy for the end user and increases communication with more universal terms that non developers can provide input against.
+
+
 ### SQLite Requirement
 
 Normally I would not use SQLite even for local development, as a significantly closer to deployed code setup can be accomplished with a Postgres container.
